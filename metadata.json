@@ -1,0 +1,6 @@
+{
+  "name": "Modern Portfolio",
+  "description": "A clean, modern portfolio starter homepage with header, hero section, and responsive project/photo image grid.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
