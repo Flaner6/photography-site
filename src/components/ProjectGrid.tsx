@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import { Eye, ArrowUpRight } from 'lucide-react';
 import { ProjectItem } from '../types';
+import { categorySubject, setCategory } from '../store/categoryStore';
 
 interface ProjectGridProps {
   projects: ProjectItem[];
@@ -8,8 +10,18 @@ interface ProjectGridProps {
 }
 
 export function ProjectGrid({ projects, onProjectClick }: ProjectGridProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>(categorySubject.getValue());
   
+  // Subscribe to the RxJS BehaviorSubject
+  useEffect(() => {
+    const subscription = categorySubject.subscribe((category) => {
+      setSelectedCategory(category);
+    });
+    
+    // Cleanup subscription on unmount
+    return () => subscription.unsubscribe();
+  }, []);
+
   const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
   
   const filteredProjects = selectedCategory === 'All'
@@ -32,7 +44,7 @@ export function ProjectGrid({ projects, onProjectClick }: ProjectGridProps) {
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => setCategory(category)}
               className={`px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all ${
                 selectedCategory === category
                   ? 'bg-neutral-100 text-neutral-900 shadow-sm'
